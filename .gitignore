@@ -671,3 +671,4 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/java,linux,macos,windows,eclipse,jetbrains,visualstudio,jetbrains+all,visualstudiocode
+ruby/.bundle

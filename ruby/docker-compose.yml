@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  app:
+    image: ruby:2.7-alpine
+    volumes:
+      - .:/app
+      - ../test:/test
+    working_dir: /app
+    environment:
+      BUNDLE_PATH: .bundle
