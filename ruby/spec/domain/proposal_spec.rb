@@ -60,4 +60,362 @@ describe Proposal do
       end
     end
   end
+
+  describe 'validating a proposal' do
+    context 'when the loan value is greater or equal to R$ 30.000 and lower than R$ 3.000.000' do
+      it 'returns true' do
+        loan_value = 30_000
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be true
+      end
+    end
+
+    context 'when the loan value is lower than R$ 30.000' do
+      it 'returns false' do
+        loan_value = 29_999
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be false
+      end
+    end
+
+    context 'when the loan value is greater than R$ 3.000.000' do
+      it 'returns false' do
+        loan_value = 3_000_000.01
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be false
+      end
+    end
+
+    context 'when the number of monthly installments is greater or equal to 2 years and less than 15 years' do
+      it 'returns true' do
+        loan_value = 50_000
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be true
+      end
+    end
+
+    context 'when the number of monthly installments is less than 2 years' do
+      it 'returns false' do
+        loan_value = 50_000
+        number_of_monthly_installments = 47
+        main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be false
+      end
+    end
+
+    context 'when the number of monthly installments is greater than 15 years' do
+      it 'returns false' do
+        loan_value = 50_000
+        number_of_monthly_installments = 181
+        main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be false
+      end
+    end
+
+    context 'when theres is only one proponent' do
+      it 'returns false' do
+        loan_value = 50_000
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: true, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be false
+      end
+    end
+
+    context 'when there is two main proponents' do
+      it 'returns false' do
+        loan_value = 50_000
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: true, age: 18)
+        secondary_proponent = instance_double(Proponent, main?: true, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be false
+      end
+    end
+
+    context 'when there is no main proponents' do
+      it 'returns false' do
+        loan_value = 50_000
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: false, age: 18)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be false
+      end
+    end
+
+    context "when the main proponent's monthly income is valid for the installment" do
+      it 'returns true' do
+        loan_value = 48_000
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be true
+      end
+    end
+
+    context "when the main proponent's monthly income is invalid for the installment" do
+      it 'returns false' do
+        loan_value = 48_000
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: false)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+        proposal.add_warranty(warranty)
+
+        subject = proposal.valid?
+
+        expect(subject).to be false
+      end
+    end
+
+    context 'when there is one warranty' do
+      context "and it's value is twice the loan value" do
+        it 'returns true' do
+          loan_value = 50_000
+          number_of_monthly_installments = 48
+          main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+          secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+          warranty = instance_double(Warranty, value: 100_000, province: 'SP')
+          proposal = described_class.new(
+            id: SecureRandom.uuid,
+            loan_value: loan_value,
+            number_of_monthly_installments: number_of_monthly_installments
+          )
+          proposal.add_proponent(main_proponent)
+          proposal.add_proponent(secondary_proponent)
+          proposal.add_warranty(warranty)
+
+          subject = proposal.valid?
+
+          expect(subject).to be true
+        end
+      end
+
+      context "and it's value isn't twice the loan value" do
+        it 'returns false' do
+          loan_value = 50_000
+          number_of_monthly_installments = 48
+          main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+          secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+          warranty = instance_double(Warranty, value: 99_999, province: 'SP')
+          proposal = described_class.new(
+            id: SecureRandom.uuid,
+            loan_value: loan_value,
+            number_of_monthly_installments: number_of_monthly_installments
+          )
+          proposal.add_proponent(main_proponent)
+          proposal.add_proponent(secondary_proponent)
+          proposal.add_warranty(warranty)
+
+          subject = proposal.valid?
+
+          expect(subject).to be false
+        end
+      end
+    end
+
+    context 'when there is two or more warranties' do
+      context "and it's summed up value is twice the loan value" do
+        it 'returns true' do
+          loan_value = 50_000
+          number_of_monthly_installments = 48
+          main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+          secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+          warranty = instance_double(Warranty, value: 50_000, province: 'SP')
+          second_warranty = instance_double(Warranty, value: 50_000, province: 'SP')
+          proposal = described_class.new(
+            id: SecureRandom.uuid,
+            loan_value: loan_value,
+            number_of_monthly_installments: number_of_monthly_installments
+          )
+          proposal.add_proponent(main_proponent)
+          proposal.add_proponent(secondary_proponent)
+          proposal.add_warranty(warranty)
+          proposal.add_warranty(second_warranty)
+
+          subject = proposal.valid?
+
+          expect(subject).to be true
+        end
+      end
+
+      context "and it's summed up value isn't twice the loan value" do
+        it 'returns false' do
+          loan_value = 50_000
+          number_of_monthly_installments = 48
+          main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+          secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+          warranty = instance_double(Warranty, value: 50_000, province: 'SP')
+          second_warranty = instance_double(Warranty, value: 49_999, province: 'SP')
+          proposal = described_class.new(
+            id: SecureRandom.uuid,
+            loan_value: loan_value,
+            number_of_monthly_installments: number_of_monthly_installments
+          )
+          proposal.add_proponent(main_proponent)
+          proposal.add_proponent(secondary_proponent)
+          proposal.add_warranty(warranty)
+          proposal.add_warranty(second_warranty)
+
+          subject = proposal.valid?
+
+          expect(subject).to be false
+        end
+      end
+    end
+
+    context 'when there is no warranty' do
+      it 'returns false' do
+        loan_value = 50_000
+        number_of_monthly_installments = 48
+        main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
+        secondary_proponent = instance_double(Proponent, main?: false, age: 18)
+        proposal = described_class.new(
+          id: SecureRandom.uuid,
+          loan_value: loan_value,
+          number_of_monthly_installments: number_of_monthly_installments
+        )
+        proposal.add_proponent(main_proponent)
+        proposal.add_proponent(secondary_proponent)
+
+        subject = proposal.valid?
+
+        expect(subject).to be false
+      end
+    end
+  end
 end
