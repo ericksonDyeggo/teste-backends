@@ -1,6 +1,4 @@
-require_relative 'proposal'
-
-class ProposalRepository
+class ProposalsRepository
   def initialize(overrides = {})
     @base = overrides.fetch(:base) { [] }
   end

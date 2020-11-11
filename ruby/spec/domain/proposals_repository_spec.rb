@@ -1,8 +1,9 @@
 require 'spec_helper'
 require 'securerandom'
-require_relative '../../domain/proposal_repository'
+require_relative '../../domain/proposals_repository'
+require_relative '../../domain/proposal'
 
-describe ProposalRepository do
+describe ProposalsRepository do
   describe 'adding a proposal' do
     context 'when receives a proposal' do
       it 'adds the proposal' do
