@@ -25,5 +25,22 @@ describe UpdateProposal do
         end
       end
     end
+
+    context 'and it does not finds the proposal' do
+      it 'raises a ProposalNotFound exception' do
+        proposal_id = 'proposal_id'
+        proposal_loan_value = 30000.0
+        proposal_number_of_monthly_installments = 48
+        proposals_repository = instance_spy(ProposalsRepository, get: nil)
+
+        expect do
+          described_class.new(proposals_repository: proposals_repository).call(
+            proposal_id: proposal_id,
+            proposal_loan_value: proposal_loan_value,
+            proposal_number_of_monthly_installments: proposal_number_of_monthly_installments
+          )
+        end.to raise_exception(ProposalNotFound)
+      end
+    end
   end
 end

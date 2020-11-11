@@ -1,0 +1,1 @@
+ProposalNotFound = Class.new(::StandardError)
