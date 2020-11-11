@@ -12,7 +12,7 @@ class ProposalsRepository
   end
 
   def all
-    base
+    base.dup
   end
 
   def find(&block)
