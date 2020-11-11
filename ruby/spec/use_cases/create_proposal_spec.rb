@@ -11,9 +11,7 @@ describe CreateProposal do
       proposals_repository = instance_spy(ProposalsRepository, add: proposal)
 
       subject = described_class.new(proposal_class: proposal_class, proposals_repository: proposals_repository).call(
-        proposal_id: proposal_id,
-        proposal_loan_value: proposal_loan_value,
-        proposal_number_of_monthly_installments: proposal_number_of_monthly_installments
+        proposal_id, proposal_loan_value.to_s, proposal_number_of_monthly_installments.to_s
       )
 
       aggregate_failures do

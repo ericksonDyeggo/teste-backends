@@ -9,7 +9,7 @@ describe DeleteProposal do
         proposal = instance_spy(Proposal)
         proposals_repository = instance_spy(ProposalsRepository, get: proposal, remove: proposal)
 
-        subject = described_class.new(proposals_repository: proposals_repository).call(proposal_id: proposal_id)
+        subject = described_class.new(proposals_repository: proposals_repository).call(proposal_id)
 
         aggregate_failures do
           expect(subject).to be proposal
@@ -24,7 +24,7 @@ describe DeleteProposal do
         proposal_id = 'proposal_id'
         proposals_repository = instance_spy(ProposalsRepository, get: nil)
 
-        expect { described_class.new(proposals_repository: proposals_repository).call(proposal_id: proposal_id) }
+        expect { described_class.new(proposals_repository: proposals_repository).call(proposal_id) }
           .to raise_exception(ProposalNotFound)
       end
     end

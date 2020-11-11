@@ -6,7 +6,7 @@ class DeleteProposal
     @proposals_repository = overrides.fetch(:proposals_repository) { ProposalsRepository }
   end
 
-  def call(proposal_id:)
+  def call(proposal_id)
     proposal = @proposals_repository.get(proposal_id)
     raise ProposalNotFound unless proposal
 
