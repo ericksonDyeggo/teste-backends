@@ -23,10 +23,12 @@ class Proposal
 
   def add_proponent(proponent)
     proponents << proponent if proponent.age >= MIN_PROPONENT_AGE
+    self
   end
 
   def add_warranty(warranty)
     warranties << warranty unless UNACCEPTABLE_PROVINCES.include?(warranty.province)
+    self
   end
 
   def valid?

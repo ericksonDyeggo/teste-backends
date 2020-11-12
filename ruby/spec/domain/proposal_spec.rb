@@ -11,9 +11,12 @@ describe Proposal do
         proponent = instance_double(Proponent, age: 18)
         proposal = described_class.new(id: nil, loan_value: nil, number_of_monthly_installments: nil)
 
-        proposal.add_proponent(proponent)
+        subject = proposal.add_proponent(proponent)
 
-        expect(proposal.proponents).to include(proponent)
+        aggregate_failures do
+          expect(proposal.proponents).to include(proponent)
+          expect(subject).to be proposal
+        end
       end
     end
 
@@ -35,9 +38,12 @@ describe Proposal do
         warranty = instance_double(Warranty, province: 'SP')
         proposal = described_class.new(id: nil, loan_value: nil, number_of_monthly_installments: nil)
 
-        proposal.add_warranty(warranty)
+        subject = proposal.add_warranty(warranty)
 
-        expect(proposal.warranties).to include(warranty)
+        aggregate_failures do
+          expect(proposal.warranties).to include(warranty)
+          expect(subject).to be proposal
+        end
       end
     end
 
