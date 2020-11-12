@@ -1,0 +1,1 @@
+WarrantyNotFound = Class.new(::StandardError)
