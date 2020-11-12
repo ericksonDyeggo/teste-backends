@@ -1,17 +1,17 @@
-require_relative '../../use_cases/update_warranty'
+require_relative '../../use_cases/remove_warranty'
 require_relative '../../domain/proposal'
 
-describe UpdateWarranty do
-  context 'when updating a warranty' do
+describe RemoveWarranty do
+  context 'when removing a warranty' do
     context "and it finds it's proposal" do
       context 'and it finds the warranty' do
-        it 'updates the warranty' do
+        it 'removes the warranty' do
           proposal_id = 'proposal_id'
           warranty_id = 'warranty_id'
           warranty_value = 200000.0
           warranty_province = 'SP'
           warranty = instance_spy(Warranty, id: warranty_id)
-          proposal = instance_spy(Proposal, warranties: [warranty])
+          proposal = instance_spy(Proposal, remove_warranty: warranty, warranties: [warranty])
           proposals_repository = instance_spy(ProposalsRepository, get: proposal)
 
           subject = described_class.new(proposals_repository: proposals_repository).call(
@@ -21,8 +21,7 @@ describe UpdateWarranty do
           aggregate_failures do
             expect(subject).to be proposal
             expect(proposals_repository).to have_received(:get).with(proposal_id)
-            expect(warranty).to have_received(:value=).with(warranty_value)
-            expect(warranty).to have_received(:province=).with(warranty_province)
+            expect(proposal).to have_received(:remove_warranty).with(warranty)
           end
         end
       end
@@ -33,7 +32,7 @@ describe UpdateWarranty do
           warranty_id = 'warranty_id'
           warranty_value = 200000.0
           warranty_province = 'SP'
-          proposal = instance_spy(Proposal, warranties: [])
+          proposal = instance_spy(Proposal, remove_warranty: nil, warranties: [])
           proposals_repository = instance_spy(ProposalsRepository, get: proposal)
 
           expect do
