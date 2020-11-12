@@ -8,14 +8,12 @@ describe RemoveWarranty do
         it 'removes the warranty' do
           proposal_id = 'proposal_id'
           warranty_id = 'warranty_id'
-          warranty_value = 200000.0
-          warranty_province = 'SP'
           warranty = instance_spy(Warranty, id: warranty_id)
           proposal = instance_spy(Proposal, remove_warranty: warranty, warranties: [warranty])
           proposals_repository = instance_spy(ProposalsRepository, get: proposal)
 
           subject = described_class.new(proposals_repository: proposals_repository).call(
-            proposal_id, warranty_id, warranty_value.to_s, warranty_province
+            proposal_id, warranty_id
           )
 
           aggregate_failures do
@@ -30,14 +28,12 @@ describe RemoveWarranty do
         it 'raises a WarrantyNotFound' do
           proposal_id = 'proposal_id'
           warranty_id = 'warranty_id'
-          warranty_value = 200000.0
-          warranty_province = 'SP'
           proposal = instance_spy(Proposal, remove_warranty: nil, warranties: [])
           proposals_repository = instance_spy(ProposalsRepository, get: proposal)
 
           expect do
             described_class.new(proposals_repository: proposals_repository).call(
-              proposal_id, warranty_id, warranty_value.to_s, warranty_province
+              proposal_id, warranty_id
             )
           end
             .to raise_exception(WarrantyNotFound)
@@ -49,13 +45,11 @@ describe RemoveWarranty do
       it 'raises a ProposalNotFound exception' do
         proposal_id = 'proposal_id'
         warranty_id = 'warranty_id'
-        warranty_value = 200000.0
-        warranty_province = 'SP'
         proposals_repository = instance_spy(ProposalsRepository, get: nil)
 
         expect do
           described_class.new(proposals_repository: proposals_repository).call(
-            proposal_id, warranty_id, warranty_value.to_s, warranty_province
+            proposal_id, warranty_id
           )
         end
           .to raise_exception(ProposalNotFound)

@@ -9,7 +9,7 @@ class RemoveWarranty
     @proposals_repository = overrides.fetch(:proposals_repository) { ProposalsRepository }
   end
 
-  def call(proposal_id, warranty_id, warranty_value, warranty_province)
+  def call(proposal_id, warranty_id)
     proposal = @proposals_repository.get(proposal_id)
     raise ProposalNotFound unless proposal
 
