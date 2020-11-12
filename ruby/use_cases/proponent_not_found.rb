@@ -1,0 +1,1 @@
+ProponentNotFound = Class.new(::StandardError)
