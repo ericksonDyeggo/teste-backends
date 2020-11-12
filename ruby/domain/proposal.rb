@@ -1,5 +1,5 @@
 class Proposal
-  attr_reader :id, :proponents, :warranties
+  attr_reader :id
   attr_accessor :loan_value, :number_of_monthly_installments
 
   MIN_LOAN_VALUE = 30_000
@@ -13,22 +13,30 @@ class Proposal
   WARRANTIES_VALUE_MULTIPLIER = 2
   UNACCEPTABLE_PROVINCES = %w[RS SC PR].freeze
 
-  def initialize(id:, loan_value:, number_of_monthly_installments:)
+  def initialize(id:, loan_value:, number_of_monthly_installments:, proponents: [], warranties: [])
     @id = id
     @loan_value = loan_value
     @number_of_monthly_installments = number_of_monthly_installments
-    @proponents = []
-    @warranties = []
+    @proponents = proponents
+    @warranties = warranties
   end
 
   def add_proponent(proponent)
-    proponents << proponent if proponent.age >= MIN_PROPONENT_AGE
+    @proponents << proponent if proponent.age >= MIN_PROPONENT_AGE
     self
   end
 
+  def remove_proponent(proponent)
+    @proponents.delete(proponent)
+  end
+
   def add_warranty(warranty)
-    warranties << warranty unless UNACCEPTABLE_PROVINCES.include?(warranty.province)
+    @warranties << warranty unless UNACCEPTABLE_PROVINCES.include?(warranty.province)
     self
+  end
+
+  def remove_warranty(warranty)
+    @warranties.delete(warranty)
   end
 
   def valid?
@@ -36,6 +44,14 @@ class Proposal
       valid_number_of_monthly_installmentas? &&
       valid_proponents? &&
       valid_warranty?
+  end
+
+  def proponents
+    @proponents.dup
+  end
+
+  def warranties
+    @warranties.dup
   end
 
   private

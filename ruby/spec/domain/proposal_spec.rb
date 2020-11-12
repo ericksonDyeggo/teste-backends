@@ -32,6 +32,35 @@ describe Proposal do
     end
   end
 
+  describe 'removing a proponent' do
+    context 'when it finds the proponent' do
+      it 'removes the proponent' do
+        proponent = instance_double(Proponent)
+        proponents = [proponent]
+        proposal = described_class.new(id: nil, loan_value: nil, number_of_monthly_installments: nil, proponents: proponents)
+
+        subject = proposal.remove_proponent(proponent)
+
+        aggregate_failures do
+          expect(subject).to be proponent
+          expect(proponents).not_to include(proponent)
+        end
+      end
+    end
+
+    context 'when it does not finds the proponent' do
+      it 'returns nil' do
+        proponent = instance_double(Proponent)
+        proponents = []
+        proposal = described_class.new(id: nil, loan_value: nil, number_of_monthly_installments: nil, proponents: proponents)
+
+        subject = proposal.remove_proponent(proponent)
+
+        expect(subject).to be_nil
+      end
+    end
+  end
+
   describe 'adding a warranty' do
     context 'when the warranty is from an acceptable province' do
       it 'adds the warranty to the proposal' do
@@ -62,6 +91,38 @@ describe Proposal do
           expect(proposal.warranties).not_to include(warranty_from_rs)
           expect(proposal.warranties).not_to include(warranty_from_sc)
           expect(proposal.warranties).not_to include(warranty_from_pr)
+        end
+      end
+    end
+  end
+
+  describe 'removing a warranty' do
+    context 'when it finds the warranty' do
+      it 'removes the warranty' do
+        warranty = instance_double(Warranty)
+        warranties = [warranty]
+        proposal = described_class.new(id: nil, loan_value: nil, number_of_monthly_installments: nil, warranties: warranties)
+
+        subject = proposal.remove_warranty(warranty)
+
+        aggregate_failures do
+          expect(subject).to be warranty
+          expect(warranties).not_to include(warranty)
+        end
+      end
+    end
+
+    context 'when it does not finds the warranty' do
+      it 'removes the warranty' do
+        warranty = instance_double(Warranty)
+        warranties = [warranty]
+        proposal = described_class.new(id: nil, loan_value: nil, number_of_monthly_installments: nil, warranties: warranties)
+
+        subject = proposal.remove_warranty(warranty)
+
+        aggregate_failures do
+          expect(subject).to be warranty
+          expect(warranties).not_to include(warranty)
         end
       end
     end
