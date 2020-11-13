@@ -14,10 +14,8 @@ class AddProponent
 
     proposal.add_proponent(
       @proponent_class.new(
-        id: proponent_id,
-        proposal_id: proposal_id,
-        name: proponent_name,
-        age: proponent_age.to_i,
+        id: proponent_id, proposal_id: proposal_id,
+        name: proponent_name, age: proponent_age.to_i,
         monthly_income: proponent_monthly_income.to_f,
         main: proponent_is_main == 'true'
       )
