@@ -220,7 +220,7 @@ describe Proposal do
     context 'when the number of monthly installments is less than 2 years' do
       it 'returns false' do
         loan_value = 50_000
-        number_of_monthly_installments = 47
+        number_of_monthly_installments = 23
         main_proponent = instance_double(Proponent, main?: true, age: 18, monthly_income_for?: true)
         secondary_proponent = instance_double(Proponent, main?: false, age: 18)
         warranty = instance_double(Warranty, value: 100_000, province: 'SP')
